@@ -33,8 +33,8 @@ This project utilizes:
 
 Feel free to reach out to me on any of the following platforms:
 
-**Discord**: @heyhalz#3496
+###### **Discord**: @heyhalz#3496
 
-**Twitter**: @HaxHallie
+###### **Twitter**: @HaxHallie
 
-**Developer Email**: haxhallie@gmail.com
+###### **Developer Email**: haxhallie@gmail.com
