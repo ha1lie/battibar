@@ -1,5 +1,10 @@
 #import "BABAnimatedTitleView.h"
 
+//CREDITS FOR THIS CELL TO LACERTOSUS: 
+//DISCORD: Bezerk#4824
+//GITHUB: LacertosusRepo
+//TWITTER: @LacertosusDeus
+
 @implementation BABAnimatedTitleView {
   UILabel *_titleLabel;
   NSLayoutConstraint *_yConstraint;

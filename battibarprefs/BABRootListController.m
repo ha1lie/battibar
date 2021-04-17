@@ -1,6 +1,5 @@
 #include "BABRootListController.h"
 
-
 @implementation BABRootListController
 
 static HBPreferences *preferences;
