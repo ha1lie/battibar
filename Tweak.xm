@@ -6,8 +6,10 @@ UIColor *darkLowColor;
 UIColor *darkFullColor;
 HBPreferences *preferences;
 double myAlpha;
+int weakColored;
+bool onlyBattery;
 
-%group enableMe
+%group universal
 
 %hook UIUserInterfaceStyleArbiter
 -(void)toggleCurrentStyle {
@@ -15,19 +17,6 @@ double myAlpha;
 	//SEND NOTIF FOR THE REST OF THE STATUS BAR TO UPDATE ITS COLORS
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"BattiBarStatusBarColorUpdate" object:nil];
 }
-%end
-
-%hook _UIStatusBarImageView
-
--(void)tintColorDidChange {
-	%orig;
-	UIColor *neededColor = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-
-	if (self.tintColor != neededColor) {
-		self.tintColor = neededColor;
-	}
-}
-
 %end
 
 %hook BCBatteryDeviceController
@@ -51,30 +40,49 @@ double myAlpha;
 
 %end
 
+%end
 
+%group batteryHooks
 
 %hook _UIBatteryView
 
 -(void)setFillColor:(UIColor *)color {
-	UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-	%orig(maybe);
+	if ([color isEqual:[UIColor clearColor]]) { //Checks if the original color was clear... if it is, Snowboard is likely trying to hide the indicator
+		%orig(color);
+	} else {
+		UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+		%orig(maybe);
+	}
 }
 
 -(void)setBodyColor:(UIColor *)color {
-	UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-	%orig(maybe);
+	if ([color isEqual:[UIColor clearColor]]) { //Checks if the original color was clear... if it is, Snowboard is likely trying to hide the indicator
+		%orig(color);
+	} else {
+		UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+		%orig(maybe);
+	}
 }
 
 -(void)setPinColor:(UIColor *)color {
-	UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-	%orig(maybe);
+	if ([color isEqual:[UIColor clearColor]]) { //Checks if the original color was clear... if it is, Snowboard is likely trying to hide the indicator
+		%orig(color);
+	} else {
+		UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+		%orig(maybe);
+	}
 }
 
--(void)setSaverModeActive:(BOOL)arg1 {
-	%orig;
-	[self setFillColor:[UIColor blueColor]]; //Just change it to some garbage color
+-(void)setBoltColor:(UIColor *)color {
+	if ([color isEqual:[UIColor clearColor]]) { //Checks if the original color was clear... if it is, Snowboard is likely trying to hide the indicator
+		%orig(color);
+	} else {
+		UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+		%orig(maybe);
+	}
 }
 
+//Handle the alpha controllers
 -(void)setBodyColorAlpha:(double)arg1 {
 	%orig(myAlpha);
 }
@@ -83,54 +91,47 @@ double myAlpha;
 	%orig(myAlpha);
 }
 
--(void)setBodyLayer:(CALayer *)arg1 {
-	CALayer *layer = arg1;
-	layer.opacity = myAlpha;
-	%orig(layer);
-}
+%end
 
--(void)setBoltMaskLayer:(CALayer *)arg1 {
-	CALayer *layer = arg1;
-	layer.opacity = myAlpha;
-	%orig(layer);
-}
+%end
 
--(void)setBoltColor:(UIColor *)arg1 {
-	UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-	%orig(maybe);
-}
+%group barHooks
 
--(void)setPinLayer:(CALayer *)arg1 {
-	CALayer *layer = arg1;
-	layer.opacity = myAlpha;
-	%orig(layer);
-}
+%hook _UIStatusBarImageView
 
--(void)setFillLayer:(CALayer *)arg1 {
-	CALayer *layer = arg1;
-	layer.opacity = myAlpha;
-	%orig(layer);
-}
--(void)setBoltLayer:(CALayer *)arg1 {
-	CALayer *layer = arg1;
-	layer.opacity = myAlpha;
-	%orig(layer);
+-(void)tintColorDidChange {
+	%orig;
+	UIColor *neededColor = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+
+	if (self.tintColor != neededColor) {
+		self.tintColor = neededColor;
+	}
 }
 
 %end
 
-
-
 %hook _UIStatusBarSignalView
 
 -(void)setActiveColor:(UIColor *)color {
-	UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-	%orig(maybe);
+	if ([color isEqual:[UIColor clearColor]]) { //Checks if the original color was clear... if it is, Snowboard is likely trying to hide the indicator
+		%orig(color);
+	} else {
+		UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+		%orig(maybe);
+	}
 }
 
 -(void)setInactiveColor:(UIColor *)color {
-	UIColor *maybe = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
-	%orig(maybe);
+	if ([color isEqual:[UIColor clearColor]]) { //Checks if the original color was clear... if it is, Snowboard is likely trying to hide the indicator
+		%orig(color);
+	} else {
+		if (weakColored == 1) {
+			UIColor *tmpColor = [[%c(BCBatteryDeviceController) sharedInstance] colorFromCharge];
+			%orig([tmpColor colorWithAlphaComponent:0.3]);
+		} else {
+			%orig([UIColor clearColor]);
+		}
+	}
 }
 
 %end
@@ -166,6 +167,7 @@ double myAlpha;
 %end
 
 
+
 %ctor {
 	if (!preferences) { //Initiate preferences instead of making it a compile-time constant
 		preferences = [[HBPreferences alloc] initWithIdentifier:@"com.halliehax.battibar.prefs"];
@@ -176,6 +178,19 @@ double myAlpha;
 		darkLowColor = [UIColor colorWithHexString:[preferences objectForKey:@"darkLowColor" default:@"#EF3B36"]];
 		darkFullColor = [UIColor colorWithHexString:[preferences objectForKey:@"darkFullColor" default:@"#FFFFFF"]];
 		myAlpha = (double)[preferences integerForKey:@"alphaInt" default:100] / (double)100.0;
-		%init(enableMe); //Initialize the hooks once the colors are set to prevent them from being nil
+		weakColored = (int)[preferences integerForKey:@"clearOrLightColor" default:1];
+		onlyBattery = [preferences boolForKey:@"onlyBattery" default:NO];
+
+		// //Do the work to check if Snowboard Status Bar Extension exists/is enabled
+		// NSDictionary *snowboardExtensionPlist = [NSDictionary dictionaryWithContentsOfFile:]
+
+
+
+
+		%init(universal);
+		%init(batteryHooks);
+		if (!onlyBattery) {
+			%init(barHooks);
+		}
 	}
 }
