@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <RemoteLog.h>
+// #import <RemoteLog.h>
 #import <Cephei/HBPreferences.h>
 #include "UIColor+BattiBar.h"
 

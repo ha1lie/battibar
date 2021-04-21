@@ -1,5 +1,6 @@
 #include "Tweak.h"
 
+//Universal variables reset by respring
 UIColor *lightLowColor;
 UIColor *lightFullColor;
 UIColor *darkLowColor;
@@ -22,7 +23,7 @@ bool onlyBattery;
 %hook BCBatteryDeviceController
 
 %new
--(UIColor *)colorFromCharge {
+-(UIColor *)colorFromCharge { //Use this framework to get the color as it has a shared instance and can find charge percentages
 	UIColor *color = [UIColor greenColor];
 	for (BCBatteryDevice *device in self.connectedDevices) {
 		if ([device isInternal]) {
@@ -173,6 +174,7 @@ bool onlyBattery;
 		preferences = [[HBPreferences alloc] initWithIdentifier:@"com.halliehax.battibar.prefs"];
 	}
 	if ([preferences boolForKey:@"isEnabled" default:YES]) { //If is enabled, set the global gradient colors
+	
 		lightLowColor = [UIColor colorWithHexString:[preferences objectForKey:@"lightLowColor" default:@"#EF3B36"]];
 		lightFullColor = [UIColor colorWithHexString:[preferences objectForKey:@"lightFullColor" default:@"#000000"]];
 		darkLowColor = [UIColor colorWithHexString:[preferences objectForKey:@"darkLowColor" default:@"#EF3B36"]];
@@ -180,12 +182,6 @@ bool onlyBattery;
 		myAlpha = (double)[preferences integerForKey:@"alphaInt" default:100] / (double)100.0;
 		weakColored = (int)[preferences integerForKey:@"clearOrLightColor" default:1];
 		onlyBattery = [preferences boolForKey:@"onlyBattery" default:NO];
-
-		// //Do the work to check if Snowboard Status Bar Extension exists/is enabled
-		// NSDictionary *snowboardExtensionPlist = [NSDictionary dictionaryWithContentsOfFile:]
-
-
-
 
 		%init(universal);
 		%init(batteryHooks);

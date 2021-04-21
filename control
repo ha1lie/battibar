@@ -1,6 +1,6 @@
 Package: com.halliehax.battibar
 Name: BattiBar
-Version: 1.0.1
+Version: 1.1
 Architecture: iphoneos-arm
 Description: Colorize your status bar with your battery level!
 Maintainer: HallieHax

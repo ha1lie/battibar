@@ -252,8 +252,27 @@
 			<key>url</key>
 			<string>https://discord.gg/WWbjTum</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>IF YOU LIKE THIS TWEAK</string>
+			<key>footerText</key>
+			<string>Your contribution helps me continue putting time into making quality tweaks for the community!</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Download WaggleTunes</string>
+			<key>subtitle</key>
+			<string>A system-wide music controller for any setup!</string>
+			<key>url</key>
+			<string>https://repo.packix.com/package/com.halliehax.waggletunes/</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>BattiBar</string>
 </dict>
 </plist>
+<!-- https://repo.packix.com/package/com.halliehax.waggletunes/ -->

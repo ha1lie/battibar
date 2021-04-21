@@ -1,6 +1,7 @@
 #line 1 "Tweak.xm"
 #include "Tweak.h"
 
+
 UIColor *lightLowColor;
 UIColor *lightFullColor;
 UIColor *darkLowColor;
@@ -31,10 +32,10 @@ bool onlyBattery;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class _UIStatusBarImageView; @class BCBatteryDeviceController; @class _UIBatteryView; @class _UIStatusBarStringView; @class _UIStatusBarSignalView; @class _UIStatusBar; @class UIUserInterfaceStyleArbiter; 
+@class _UIStatusBar; @class BCBatteryDeviceController; @class _UIBatteryView; @class _UIStatusBarStringView; @class _UIStatusBarImageView; @class UIUserInterfaceStyleArbiter; @class _UIStatusBarSignalView; 
 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BCBatteryDeviceController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BCBatteryDeviceController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$UIUserInterfaceStyleArbiter(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("UIUserInterfaceStyleArbiter"); } return _klass; }
-#line 12 "Tweak.xm"
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$UIUserInterfaceStyleArbiter(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("UIUserInterfaceStyleArbiter"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$BCBatteryDeviceController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("BCBatteryDeviceController"); } return _klass; }
+#line 13 "Tweak.xm"
 static void (*_logos_orig$universal$UIUserInterfaceStyleArbiter$toggleCurrentStyle)(_LOGOS_SELF_TYPE_NORMAL UIUserInterfaceStyleArbiter* _LOGOS_SELF_CONST, SEL); static void _logos_method$universal$UIUserInterfaceStyleArbiter$toggleCurrentStyle(_LOGOS_SELF_TYPE_NORMAL UIUserInterfaceStyleArbiter* _LOGOS_SELF_CONST, SEL); static UIColor * _logos_method$universal$BCBatteryDeviceController$colorFromCharge(_LOGOS_SELF_TYPE_NORMAL BCBatteryDeviceController* _LOGOS_SELF_CONST, SEL); 
 
 
@@ -48,7 +49,7 @@ static void _logos_method$universal$UIUserInterfaceStyleArbiter$toggleCurrentSty
 
 
 
-static UIColor * _logos_method$universal$BCBatteryDeviceController$colorFromCharge(_LOGOS_SELF_TYPE_NORMAL BCBatteryDeviceController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
+static UIColor * _logos_method$universal$BCBatteryDeviceController$colorFromCharge(_LOGOS_SELF_TYPE_NORMAL BCBatteryDeviceController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) { 
 	UIColor *color = [UIColor greenColor];
 	for (BCBatteryDevice *device in self.connectedDevices) {
 		if ([device isInternal]) {
@@ -194,11 +195,12 @@ static void _logos_method$barHooks$_UIStatusBar$setForegroundColor$(_LOGOS_SELF_
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_7ee34f56(int __unused argc, char __unused **argv, char __unused **envp) {
+static __attribute__((constructor)) void _logosLocalCtor_b2edea14(int __unused argc, char __unused **argv, char __unused **envp) {
 	if (!preferences) { 
 		preferences = [[HBPreferences alloc] initWithIdentifier:@"com.halliehax.battibar.prefs"];
 	}
 	if ([preferences boolForKey:@"isEnabled" default:YES]) { 
+	
 		lightLowColor = [UIColor colorWithHexString:[preferences objectForKey:@"lightLowColor" default:@"#EF3B36"]];
 		lightFullColor = [UIColor colorWithHexString:[preferences objectForKey:@"lightFullColor" default:@"#000000"]];
 		darkLowColor = [UIColor colorWithHexString:[preferences objectForKey:@"darkLowColor" default:@"#EF3B36"]];
@@ -206,12 +208,6 @@ static __attribute__((constructor)) void _logosLocalCtor_7ee34f56(int __unused a
 		myAlpha = (double)[preferences integerForKey:@"alphaInt" default:100] / (double)100.0;
 		weakColored = (int)[preferences integerForKey:@"clearOrLightColor" default:1];
 		onlyBattery = [preferences boolForKey:@"onlyBattery" default:NO];
-
-		
-		
-
-
-
 
 		{Class _logos_class$universal$UIUserInterfaceStyleArbiter = objc_getClass("UIUserInterfaceStyleArbiter"); { MSHookMessageEx(_logos_class$universal$UIUserInterfaceStyleArbiter, @selector(toggleCurrentStyle), (IMP)&_logos_method$universal$UIUserInterfaceStyleArbiter$toggleCurrentStyle, (IMP*)&_logos_orig$universal$UIUserInterfaceStyleArbiter$toggleCurrentStyle);}Class _logos_class$universal$BCBatteryDeviceController = objc_getClass("BCBatteryDeviceController"); { char _typeEncoding[1024]; unsigned int i = 0; memcpy(_typeEncoding + i, @encode(UIColor *), strlen(@encode(UIColor *))); i += strlen(@encode(UIColor *)); _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$universal$BCBatteryDeviceController, @selector(colorFromCharge), (IMP)&_logos_method$universal$BCBatteryDeviceController$colorFromCharge, _typeEncoding); }}
 		{Class _logos_class$batteryHooks$_UIBatteryView = objc_getClass("_UIBatteryView"); { MSHookMessageEx(_logos_class$batteryHooks$_UIBatteryView, @selector(setFillColor:), (IMP)&_logos_method$batteryHooks$_UIBatteryView$setFillColor$, (IMP*)&_logos_orig$batteryHooks$_UIBatteryView$setFillColor$);}{ MSHookMessageEx(_logos_class$batteryHooks$_UIBatteryView, @selector(setBodyColor:), (IMP)&_logos_method$batteryHooks$_UIBatteryView$setBodyColor$, (IMP*)&_logos_orig$batteryHooks$_UIBatteryView$setBodyColor$);}{ MSHookMessageEx(_logos_class$batteryHooks$_UIBatteryView, @selector(setPinColor:), (IMP)&_logos_method$batteryHooks$_UIBatteryView$setPinColor$, (IMP*)&_logos_orig$batteryHooks$_UIBatteryView$setPinColor$);}{ MSHookMessageEx(_logos_class$batteryHooks$_UIBatteryView, @selector(setBoltColor:), (IMP)&_logos_method$batteryHooks$_UIBatteryView$setBoltColor$, (IMP*)&_logos_orig$batteryHooks$_UIBatteryView$setBoltColor$);}{ MSHookMessageEx(_logos_class$batteryHooks$_UIBatteryView, @selector(setBodyColorAlpha:), (IMP)&_logos_method$batteryHooks$_UIBatteryView$setBodyColorAlpha$, (IMP*)&_logos_orig$batteryHooks$_UIBatteryView$setBodyColorAlpha$);}{ MSHookMessageEx(_logos_class$batteryHooks$_UIBatteryView, @selector(setPinColorAlpha:), (IMP)&_logos_method$batteryHooks$_UIBatteryView$setPinColorAlpha$, (IMP*)&_logos_orig$batteryHooks$_UIBatteryView$setPinColorAlpha$);}}
